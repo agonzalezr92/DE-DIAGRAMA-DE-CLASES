@@ -18,11 +18,14 @@ def mostrar_pregunta(pregunta, es_regional=False):
     print(f"\n{pregunta.enunciado}")
     if pregunta.ayuda and not es_regional:
         print(f"Ayuda: {pregunta.ayuda}")
-    for idx, alternativa in enumerate(pregunta.alternativas):
+    
+    numero = 1
+    for alternativa in pregunta.alternativas:
         if es_regional and alternativa.contenido in ["Sí", "No"]:
-            print(f"{idx + 1}. {alternativa.contenido}")
+            print(f"{numero}. {alternativa.contenido}")
         else:
-            print(f"{idx + 1}. {alternativa.contenido} (Ayuda: {alternativa.ayuda if alternativa.ayuda else 'N/A'})")
+            print(f"{numero}. {alternativa.contenido} (Ayuda: {alternativa.ayuda if alternativa.ayuda else 'N/A'})")
+        numero += 1
 
 def obtener_respuestas(preguntas, es_regional=False):
     """
@@ -38,16 +41,22 @@ def obtener_respuestas(preguntas, es_regional=False):
     respuestas = []
     for pregunta in preguntas:
         mostrar_pregunta(pregunta, es_regional)
-        while True:
-            try:
-                respuesta = int(input("Selecciona una opción (número): ")) - 1
+        respuesta_valida = False
+        
+        while not respuesta_valida:
+            respuesta = input("Selecciona una opción (número): ")
+            
+            if respuesta.isdigit():
+                respuesta = int(respuesta) - 1
+                
                 if 0 <= respuesta < len(pregunta.alternativas):
                     respuestas.append(respuesta)
-                    break
+                    respuesta_valida = True
                 else:
                     print("Opción inválida, por favor selecciona un número válido.")
-            except ValueError:
+            else:
                 print("Entrada inválida, por favor ingresa un número.")
+                
     return respuestas
 
 def main():
@@ -81,38 +90,41 @@ def main():
         encuesta_regional.preguntas.append(pregunta)
 
     # Obtener datos del usuario
-    try:
-        edad = int(input("Introduce tu edad: "))
-        region = int(input("Introduce tu región (9 - Araucanía, 10 - Los Lagos, 14 - Los Ríos): "))
+    edad = input("Introduce tu edad: ")
+    region = input("Introduce tu región (9 - Araucanía, 10 - Los Lagos, 14 - Los Ríos): ")
 
-        # Validar edad
-        if not (35 <= edad <= 70):
-            print("No puedes participar en la encuesta de salud debido a que tu edad no está dentro del rango permitido (35-70 años).")
-            return
+    if not edad.isdigit() or not region.isdigit():
+        print("Entrada inválida, por favor ingresa números válidos para la edad y la región.")
+        return
+    
+    edad = int(edad)
+    region = int(region)
 
-        # Crear usuario
-        usuario = Usuario("", edad, region)
+    # Validar edad
+    if not (35 <= edad <= 70):
+        print("No puedes participar en la encuesta de salud debido a que tu edad no está dentro del rango permitido (35-70 años).")
+        return
 
-        # Validar región
-        if region not in encuesta_regional.regiones:
-            print("No puedes participar en la encuesta regional debido a que tu región no está dentro de las regiones permitidas.")
-            return
+    # Crear usuario
+    usuario = Usuario("", edad, region)
 
-        # Mostrar encuestas y obtener respuestas
-        print("\nRespondiendo Encuesta de Salud:")
-        respuestas_salud = obtener_respuestas(encuesta_salud.preguntas)
-        listado_respuestas_salud = ListadoRespuestas(usuario, respuestas_salud)
-        encuesta_salud.agregar_respuestas(listado_respuestas_salud)
+    # Validar región
+    if region not in encuesta_regional.regiones:
+        print("No puedes participar en la encuesta regional debido a que tu región no está dentro de las regiones permitidas.")
+        return
 
-        print("\nRespondiendo Encuesta Regional de Salud:")
-        respuestas_regional = obtener_respuestas(encuesta_regional.preguntas, es_regional=True)
-        listado_respuestas_regional = ListadoRespuestas(usuario, respuestas_regional)
-        encuesta_regional.agregar_respuestas(listado_respuestas_regional)
+    # Mostrar encuestas y obtener respuestas
+    print("\nRespondiendo Encuesta de Salud:")
+    respuestas_salud = obtener_respuestas(encuesta_salud.preguntas)
+    listado_respuestas_salud = ListadoRespuestas(usuario, respuestas_salud)
+    encuesta_salud.agregar_respuestas(listado_respuestas_salud)
 
-        print("\n¡Gracias por participar en la encuesta!")
+    print("\nRespondiendo Encuesta Regional de Salud:")
+    respuestas_regional = obtener_respuestas(encuesta_regional.preguntas, es_regional=True)
+    listado_respuestas_regional = ListadoRespuestas(usuario, respuestas_regional)
+    encuesta_regional.agregar_respuestas(listado_respuestas_regional)
 
-    except ValueError:
-        print("Entrada inválida, por favor ingresa un número válido para la edad y la región.")
+    print("\n¡Gracias por participar en la encuesta!")
 
 if __name__ == "__main__":
     main()
