@@ -13,7 +13,8 @@ class Usuario:
         self._edad = edad
         self._region = region
 
-    def get_correo(self):
+    @property
+    def correo(self):
         """
         Obtiene el correo electrónico del usuario.
 
@@ -21,7 +22,12 @@ class Usuario:
         """
         return self._correo
 
-    def get_edad(self):
+    @correo.setter
+    def correo(self, valor):
+        self._correo = valor
+
+    @property
+    def edad(self):
         """
         Obtiene la edad del usuario.
 
@@ -29,7 +35,12 @@ class Usuario:
         """
         return self._edad
 
-    def get_region(self):
+    @edad.setter
+    def edad(self, valor):
+        self._edad = valor
+
+    @property
+    def region(self):
         """
         Obtiene la región del usuario.
 
@@ -37,44 +48,10 @@ class Usuario:
         """
         return self._region
 
-    def set_correo(self, correo):
-        """
-        Establece el correo electrónico del usuario.
-
-        :param correo: El nuevo correo electrónico del usuario.
-        """
-        self._correo = correo
-
-    def set_edad(self, edad):
-        """
-        Establece la edad del usuario.
-
-        :param edad: La nueva edad del usuario (número entero).
-        """
-        self._edad = edad
-
-    def set_region(self, region):
-        """
-        Establece la región del usuario.
-
-        :param region: La nueva región del usuario (número entero).
-        """
-        self._region = region
+    @region.setter
+    def region(self, valor):
+        self._region = valor
 
     def contestar_encuesta(self, encuesta, respuestas):
-        """
-        Permite al usuario contestar una encuesta.
-
-        :param encuesta: El objeto Encuesta que se va a contestar.
-        :param respuestas: Una lista de respuestas (números enteros) que el usuario proporciona.
-        """
         listado_respuestas = ListadoRespuestas(self, respuestas)
-        encuesta.agregar_listado_respuestas(listado_respuestas)
-
-    def mostrar_usuario(self):
-        """
-        Muestra la información del usuario.
-        """
-        print(f"Correo: {self._correo}")
-        print(f"Edad: {self._edad}")
-        print(f"Región: {self._region}")
+        encuesta.agregar_respuestas(listado_respuestas)

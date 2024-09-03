@@ -9,26 +9,18 @@ class ListadoRespuestas:
         self._usuario = usuario
         self._respuestas = respuestas
 
-    def get_usuario(self):
-        """
-        Obtiene el usuario que generó este listado de respuestas.
-
-        :return: El usuario asociado al listado de respuestas.
-        """
+    @property
+    def usuario(self):
         return self._usuario
 
-    def get_respuestas(self):
-        """
-        Obtiene la lista de respuestas.
-
-        :return: Una lista de respuestas (números enteros).
-        """
+    @property
+    def respuestas(self):
         return self._respuestas
 
-    def mostrar_respuestas(self):
-        """
-        Muestra las respuestas del listado.
-        """
-        print("Respuestas:")
-        for respuesta in self._respuestas:
-            print(respuesta)
+    def mostrar_respuestas(self, encuesta):
+        """ Muestra las respuestas del usuario en formato legible. """
+        respuestas_texto = [
+            encuesta.preguntas[idx].alternativas[resp].contenido
+            for idx, resp in enumerate(self._respuestas)
+        ]
+        return f"Usuario: {self._usuario.correo}, Respuestas: {respuestas_texto}"
