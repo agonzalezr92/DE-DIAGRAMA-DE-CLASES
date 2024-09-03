@@ -1,4 +1,4 @@
-# Proyecto
+# Proyecto Desafío Diagrama de clases
 
 Este proyecto consiste en una aplicación de consola en Python para gestionar encuestas, preguntas, alternativas, respuestas y usuarios. La aplicación permite crear encuestas, agregar preguntas con alternativas, responder encuestas y gestionar usuarios.
 
